@@ -86,8 +86,10 @@ std::unique_ptr<DSP> get_dsp(const std::filesystem::path config_filename)
   return get_dsp(config_filename, temp);
 }
 
-std::unique_ptr<DSP> get_dsp(const std::filesystem::path config_filename, dspData& returnedConfig)
+dspData get_dsp_data(const std::filesystem::path config_filename)
 {
+  dspData returnedConfig;
+
   if (!std::filesystem::exists(config_filename))
     throw std::runtime_error("Config JSON doesn't exist!\n");
   std::ifstream i(config_filename);
@@ -112,12 +114,16 @@ std::unique_ptr<DSP> get_dsp(const std::filesystem::path config_filename, dspDat
     returnedConfig.expected_sample_rate = -1.0;
   }
 
+  return returnedConfig;
+}
 
+std::unique_ptr<DSP> get_dsp(const std::filesystem::path config_filename, dspData& returnedConfig)
+{
   /*Copy to a new dsp_config object for get_dsp below,
    since not sure if weights actually get modified as being non-const references on some
    model constructors inside get_dsp(dsp_config& conf).
    We need to return unmodified version of dsp_config via returnedConfig.*/
-  dspData conf = returnedConfig;
+  dspData conf = get_dsp_data(config_filename);
 
   return get_dsp(conf);
 }
@@ -166,7 +172,7 @@ std::unique_ptr<DSP> get_dsp(dspData& conf)
     const int hidden_size = config["hidden_size"];
     out = std::make_unique<lstm::LSTM>(num_layers, input_size, hidden_size, weights, expectedSampleRate);
   }
-  else if (architecture == "WaveNet")
+  /*else if (architecture == "WaveNet")
   {
     std::vector<wavenet::LayerArrayParams> layer_array_params;
     for (size_t i = 0; i < config["layers"].size(); i++)
@@ -183,7 +189,7 @@ std::unique_ptr<DSP> get_dsp(dspData& conf)
     const bool with_head = config["head"] == NULL;
     const float head_scale = config["head_scale"];
     out = std::make_unique<wavenet::WaveNet>(layer_array_params, head_scale, with_head, weights, expectedSampleRate);
-  }
+  }*/
   else
   {
     throw std::runtime_error("Unrecognized architecture");

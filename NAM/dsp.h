@@ -51,7 +51,7 @@ public:
   // 1. The core DSP algorithm is run (This is what should probably be
   //    overridden in subclasses).
   // 2. The output level is applied and the result stored to `output`.
-  virtual void process(NAM_SAMPLE* input, NAM_SAMPLE* output, const int num_frames);
+  virtual void process(const NAM_SAMPLE* input, NAM_SAMPLE* output, const int num_frames);
   // Anything to take care of before next buffer comes in.
   // For example:
   // * Move the buffer index forward
@@ -101,7 +101,7 @@ protected:
   void _set_receptive_field(const int new_receptive_field);
   void _reset_input_buffer();
   // Use this->_input_post_gain
-  virtual void _update_buffers_(NAM_SAMPLE* input, int num_frames);
+  virtual void _update_buffers_(const NAM_SAMPLE* input, int num_frames);
   virtual void _rewind_buffers_();
 };
 
@@ -111,7 +111,7 @@ class Linear : public Buffer
 public:
   Linear(const int receptive_field, const bool _bias, const std::vector<float>& weights,
          const double expected_sample_rate = -1.0);
-  void process(NAM_SAMPLE* input, NAM_SAMPLE* output, const int num_frames) override;
+  void process(const NAM_SAMPLE* input, NAM_SAMPLE* output, const int num_frames) override;
 
 protected:
   Eigen::VectorXf _weight;
@@ -198,6 +198,7 @@ struct dspData
 // this plugin version.
 void verify_config_version(const std::string version);
 
+dspData get_dsp_data(const std::filesystem::path config_filename);
 // Takes the model file and uses it to instantiate an instance of DSP.
 std::unique_ptr<DSP> get_dsp(const std::filesystem::path model_file);
 // Creates an instance of DSP. Also returns a dspData struct that holds the data of the model.

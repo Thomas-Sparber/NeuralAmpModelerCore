@@ -8,7 +8,7 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED OFF)
 set(CMAKE_CXX_EXTENSIONS OFF)
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -std=c++20")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20 -fPIC")
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Darwin")
 	include_directories(SYSTEM /usr/local/include)
@@ -23,6 +23,15 @@ endif()
 set(NAM_DEPS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies")
 
 add_subdirectory(tools)
+
+file(GLOB_RECURSE NAM_SOURCES NAM/*.cpp NAM/*.c NAM*.h)
+include_directories(NAM Dependencies/eigen)
+include_directories(NAM Dependencies/nlohmann)
+ADD_LIBRARY(NAM STATIC ${NAM_SOURCES})
+target_compile_options(NAM PUBLIC -DNAM_SAMPLE_FLOAT -O3)
+#ADD_LIBRARY(NAM INTERFACE)
+#ADD_LIBRARY(NAM::NAM ALIAS NAM)
+#target_compile_features(NAM INTERFACE cxx_std_11)
 
 #file(MAKE_DIRECTORY build/tools)
 

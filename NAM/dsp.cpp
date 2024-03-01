@@ -36,7 +36,7 @@ void nam::DSP::prewarm()
   }
 }
 
-void nam::DSP::process(NAM_SAMPLE* input, NAM_SAMPLE* output, const int num_frames)
+void nam::DSP::process(const NAM_SAMPLE* input, NAM_SAMPLE* output, const int num_frames)
 {
   // Default implementation is the null operation
   for (size_t i = 0; i < num_frames; i++)
@@ -81,7 +81,7 @@ void nam::Buffer::_set_receptive_field(const int new_receptive_field, const int 
   this->_reset_input_buffer();
 }
 
-void nam::Buffer::_update_buffers_(NAM_SAMPLE* input, const int num_frames)
+void nam::Buffer::_update_buffers_(const NAM_SAMPLE* input, const int num_frames)
 {
   // Make sure that the buffer is big enough for the receptive field and the
   // frames needed!
@@ -152,7 +152,7 @@ nam::Linear::Linear(const int receptive_field, const bool _bias, const std::vect
   this->_bias = _bias ? weights[receptive_field] : (float)0.0;
 }
 
-void nam::Linear::process(NAM_SAMPLE* input, NAM_SAMPLE* output, const int num_frames)
+void nam::Linear::process(const NAM_SAMPLE* input, NAM_SAMPLE* output, const int num_frames)
 {
   this->nam::Buffer::_update_buffers_(input, num_frames);
 
