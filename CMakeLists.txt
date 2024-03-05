@@ -22,7 +22,7 @@ endif()
 
 set(NAM_DEPS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/Dependencies")
 
-add_subdirectory(tools)
+#add_subdirectory(tools)
 
 file(GLOB_RECURSE NAM_SOURCES NAM/*.cpp NAM/*.c NAM*.h)
 include_directories(NAM Dependencies/eigen)

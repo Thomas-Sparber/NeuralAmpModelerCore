@@ -172,7 +172,7 @@ std::unique_ptr<DSP> get_dsp(dspData& conf)
     const int hidden_size = config["hidden_size"];
     out = std::make_unique<lstm::LSTM>(num_layers, input_size, hidden_size, weights, expectedSampleRate);
   }
-  /*else if (architecture == "WaveNet")
+  else if (architecture == "WaveNet")
   {
     std::vector<wavenet::LayerArrayParams> layer_array_params;
     for (size_t i = 0; i < config["layers"].size(); i++)
@@ -189,7 +189,7 @@ std::unique_ptr<DSP> get_dsp(dspData& conf)
     const bool with_head = config["head"] == NULL;
     const float head_scale = config["head_scale"];
     out = std::make_unique<wavenet::WaveNet>(layer_array_params, head_scale, with_head, weights, expectedSampleRate);
-  }*/
+  }
   else
   {
     throw std::runtime_error("Unrecognized architecture");
